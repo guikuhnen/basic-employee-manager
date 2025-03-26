@@ -1,4 +1,7 @@
 
+using EmployeeManager.Data.Context;
+using Microsoft.EntityFrameworkCore;
+
 namespace EmployeeManager.API
 {
     public class Program
@@ -14,7 +17,10 @@ namespace EmployeeManager.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+			var connection = builder.Configuration["MySQLConnection:MySQLConnectionString"];
+			builder.Services.AddDbContext<MySQLContext>(options => options.UseMySql(connection, new MySqlServerVersion(new Version(8, 3, 0))));
+
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

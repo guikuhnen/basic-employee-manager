@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManager.Data.Context
 {
-	internal class MySQLContext : DbContext
+	public class MySQLContext : DbContext
 	{
 		public MySQLContext() { }
 
