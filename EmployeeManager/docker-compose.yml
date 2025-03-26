@@ -1,5 +1,9 @@
+version: '3.4'
+
+name: employee-manager
 services:
   employee-manager-db:
+    container_name: employee-manager-db
     image: employee-manager-db
     command: mysqld --default_authentication_plugin=mysql_native_password
     restart: always
@@ -22,6 +26,7 @@ services:
       - employee-manager-network
       
   employee-manager:
+    container_name: employee-manager-api
     image: employee-manager
     build:
       context: .
