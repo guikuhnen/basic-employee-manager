@@ -1,6 +1,7 @@
 ﻿using EmployeeManager.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EmployeeManager.Domain.Models
 {
@@ -42,7 +43,8 @@ namespace EmployeeManager.Domain.Models
 
 		public Employee() { }
 
-		public Employee(string firstName, string lastName, string email, string documentNumber, List<PhoneNumber>? phoneNumbers, Employee? manager, ERoleType role, string password, DateTime birthDate, bool active, string? refreshToken, DateTime? refreshTokenExpiryTime)
+		[SetsRequiredMembers]
+		public Employee(string firstName, string lastName, string email, string documentNumber, List<PhoneNumber>? phoneNumbers, Employee? manager, ERoleType role, string password, DateTime birthDate, bool active)
 		{
 			FirstName = firstName;
 			LastName = lastName;
@@ -54,8 +56,6 @@ namespace EmployeeManager.Domain.Models
 			Password = password;
 			BirthDate = birthDate;
 			Active = active;
-			RefreshToken = refreshToken;
-			RefreshTokenExpiryTime = refreshTokenExpiryTime;
 		}
 
 		public bool IsMinor()

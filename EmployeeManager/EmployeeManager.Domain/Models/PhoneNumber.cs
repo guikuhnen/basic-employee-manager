@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EmployeeManager.Domain.Models
 {
@@ -14,6 +15,7 @@ namespace EmployeeManager.Domain.Models
 
 		public PhoneNumber() { }
 
+		[SetsRequiredMembers]
 		public PhoneNumber(string number, Employee employee)
 		{
 			Number = number;

@@ -15,7 +15,7 @@ namespace EmployeeManager.Application.Interfaces
 		/// Get all employees from the database
 		/// </summary>
 		/// <returns>IEnumerable<EmployeeDTO></returns>
-		Task<IEnumerable<EmployeeDTO>> GetAllEmployees();
+		Task<IEnumerable<EmployeeDTO>?> GetAllEmployees();
 
 		/// <summary>
 		/// Get an employee by their ID

@@ -2,8 +2,8 @@
 
 namespace EmployeeManager.Application.Services
 {
-	public abstract class BaseService(ILogger<BaseService> logger)
+	public abstract class BaseService<T>(ILogger<T> logger)
 	{
-		protected readonly ILogger<BaseService> _logger = logger;
+		protected readonly ILogger<T> _logger = logger;
 	}
 }
