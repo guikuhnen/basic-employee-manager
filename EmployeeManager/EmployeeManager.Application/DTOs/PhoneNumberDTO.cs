@@ -8,6 +8,7 @@ namespace EmployeeManager.Application.DTOs
 
 		public long EmployeeId { get; set; }
 
+		public PhoneNumberDTO() { }
 		public PhoneNumberDTO(PhoneNumber phoneNumber)
 		{
 			Id = phoneNumber.Id;

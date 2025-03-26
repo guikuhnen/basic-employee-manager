@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManager.Data.Repositories
 {
-	internal class PhoneNumberRepository(MySQLContext context) : IPhoneNumberRepository
+	public class PhoneNumberRepository(MySQLContext context) : IPhoneNumberRepository
 	{
 		public readonly MySQLContext _context = context;
 

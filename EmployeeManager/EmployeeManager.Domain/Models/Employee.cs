@@ -17,7 +17,7 @@ namespace EmployeeManager.Domain.Models
 		[DataType(DataType.EmailAddress), EmailAddress(ErrorMessage = "Enter a valid e-mail."), MaxLength(40)]
 		public required string Email { get; set; }
 
-		[Key, DatabaseGenerated(DatabaseGeneratedOption.None), Display(Name = "Document Number"), StringLength(20, MinimumLength = 6, ErrorMessage = "{0} size should be between {2} and {1} characters.")]
+		[DatabaseGenerated(DatabaseGeneratedOption.None), Display(Name = "Document Number"), StringLength(20, MinimumLength = 6, ErrorMessage = "{0} size should be between {2} and {1} characters.")]
 		public required string DocumentNumber { get; set; }
 
 		public List<PhoneNumber>? PhoneNumbers { get; set; }
@@ -63,9 +63,9 @@ namespace EmployeeManager.Domain.Models
 			return BirthDate.AddYears(18) > DateTime.Now;
 		}
 
-		public bool CanBeManager(ERoleType toBeManagerRole)
+		public bool CanBeManager(ERoleType employeeRole)
 		{
-			return (int)toBeManagerRole <= (int)Role;
+			return (int)employeeRole >= (int)Role;
 		}
 	}
 }

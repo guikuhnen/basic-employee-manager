@@ -6,12 +6,13 @@ using Microsoft.Extensions.Logging;
 
 namespace EmployeeManager.Application.Services
 {
-	internal class EmployeeService(ILogger<EmployeeService> logger,
+	public class EmployeeService(ILogger<EmployeeService> logger,
 		IEmployeeRepository repository,
-		IPhoneNumberRepository phoneNumberRepository) : BaseService<EmployeeService>(logger), IEmployeeService
+		IPhoneNumberRepository phoneNumberRepository) : IEmployeeService
 	{
-		public readonly IEmployeeRepository _repository = repository;
-		public readonly IPhoneNumberRepository _phoneNumberRepository = phoneNumberRepository;
+		private readonly ILogger<EmployeeService> _logger = logger;
+		private readonly IEmployeeRepository _repository = repository;
+		private readonly IPhoneNumberRepository _phoneNumberRepository = phoneNumberRepository;
 
 		/// <summary>
 		/// Add an employee to the database
@@ -22,20 +23,26 @@ namespace EmployeeManager.Application.Services
 		{
 			try
 			{
+				_logger.LogInformation("EmployeeService - AddEmployee - Begin");
+
 				var newEmployee = await ConvertEmployeeDTODomain(employee, false);
 
 				await _repository.AddEmployee(newEmployee);
 
 				if (employee.PhoneNumbers != null)
 				{
+					_logger.LogInformation("EmployeeService - AddEmployee - PhoneNumbers");
+
 					List<PhoneNumber> phoneNumbers = employee.PhoneNumbers.Select(p => new PhoneNumber(p.Number, newEmployee)).ToList();
 
 					await _phoneNumberRepository.AddPhoneNumbers(phoneNumbers);
 				}
+
+				_logger.LogInformation("EmployeeService - AddEmployee - End");
 			}
 			catch (Exception e)
 			{
-				var errorMessage = $"AddEmployee - ERROR - {e.Message}";
+				var errorMessage = $"EmployeeService - AddEmployee - ERROR - {e.Message}";
 				_logger.LogError("{Message}", errorMessage);
 				throw;
 			}
@@ -49,13 +56,19 @@ namespace EmployeeManager.Application.Services
 		{
 			try
 			{
+				_logger.LogInformation("EmployeeService - GetAllEmployees - Begin");
+
 				var employees = await _repository.GetAllEmployees();
 
-				return employees?.Select(e => new EmployeeDTO(e)).ToList();
+				var result = employees?.Select(e => new EmployeeDTO(e)).ToList();
+
+				_logger.LogInformation("EmployeeService - GetAllEmployees - End");
+
+				return result;
 			}
 			catch (Exception e)
 			{
-				var errorMessage = $"GetAllEmployees - ERROR - {e.Message}";
+				var errorMessage = $"EmployeeService - GetAllEmployees - ERROR - {e.Message}";
 				_logger.LogError("{Message}", errorMessage);
 				throw;
 			}
@@ -70,13 +83,19 @@ namespace EmployeeManager.Application.Services
 		{
 			try
 			{
+				_logger.LogInformation("EmployeeService - GetEmployee - Begin");
+
 				var employee = await _repository.GetEmployee(id);
 
-				return new EmployeeDTO(employee);
+				var result = new EmployeeDTO(employee);
+
+				_logger.LogInformation("EmployeeService - GetEmployee - End");
+
+				return result;
 			}
 			catch (Exception e)
 			{
-				var errorMessage = $"GetEmployee - ERROR - {e.Message}";
+				var errorMessage = $"EmployeeService - GetEmployee - ERROR - {e.Message}";
 				_logger.LogError("{Message}", errorMessage);
 				throw;
 			}
@@ -91,18 +110,24 @@ namespace EmployeeManager.Application.Services
 		{
 			try
 			{
+				_logger.LogInformation("EmployeeService - UpdateEmployee - Begin");
+
 				var updateEmployee = await ConvertEmployeeDTODomain(employee, true);
 
 				await _repository.UpdateEmployee(updateEmployee);
 
 				if (updateEmployee.PhoneNumbers?.Count > 0)
 				{
+					_logger.LogInformation("EmployeeService - UpdateEmployee - PhoneNumbers");
+
 					await _phoneNumberRepository.UpdatePhoneNumbers(updateEmployee.PhoneNumbers);
 				}
+
+				_logger.LogInformation("EmployeeService - UpdateEmployee - End");
 			}
 			catch (Exception e)
 			{
-				var errorMessage = $"UpdateEmployee - ERROR - {e.Message}";
+				var errorMessage = $"EmployeeService - UpdateEmployee - ERROR - {e.Message}";
 				_logger.LogError("{Message}", errorMessage);
 				throw;
 			}
@@ -117,11 +142,15 @@ namespace EmployeeManager.Application.Services
 		{
 			try
 			{
+				_logger.LogInformation("EmployeeService - DeleteEmployee - Begin");
+
 				await _repository.DeleteEmployee(id);
+
+				_logger.LogInformation("EmployeeService - DeleteEmployee - End");
 			}
 			catch (Exception e)
 			{
-				var errorMessage = $"DeleteEmployee - ERROR - {e.Message}";
+				var errorMessage = $"EmployeeService - DeleteEmployee - ERROR - {e.Message}";
 				_logger.LogError("{Message}", errorMessage);
 				throw;
 			}
@@ -132,6 +161,11 @@ namespace EmployeeManager.Application.Services
 		private async Task<Employee> ConvertEmployeeDTODomain(EmployeeDTO employee, bool informId)
 		{
 			var manager = employee.ManagerId.HasValue ? await _repository.GetEmployee(employee.ManagerId.Value) : null;
+
+			if (manager is not null && !manager.CanBeManager(employee.Role))
+			{
+				throw new Exception("The employee selected to act like a manager is invalid.");
+			}
 
 			var newEmployee = new Employee
 			(
@@ -146,6 +180,11 @@ namespace EmployeeManager.Application.Services
 				employee.BirthDate,
 				employee.Active
 			);
+
+			if (newEmployee.IsMinor())
+			{
+				throw new Exception("This person is a minor. Please register a valid employee. ");
+			}
 
 			if (informId)
 			{

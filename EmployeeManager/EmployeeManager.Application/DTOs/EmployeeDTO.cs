@@ -22,6 +22,8 @@ namespace EmployeeManager.Application.DTOs
 
 		#endregion
 
+		public EmployeeDTO() { }
+
 		public EmployeeDTO(Employee employee)
 		{
 			Id = employee.Id;

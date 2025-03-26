@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManager.Data.Repositories
 {
-	internal class EmployeeRepository(MySQLContext context) : IEmployeeRepository
+	public class EmployeeRepository(MySQLContext context) : IEmployeeRepository
 	{
 		public readonly MySQLContext _context = context;
 
@@ -27,7 +27,9 @@ namespace EmployeeManager.Data.Repositories
 		/// <returns>IEnumerable<Employee></returns>
 		public async Task<IEnumerable<Employee>> GetAllEmployees()
 		{
-			return await _context.Employees.ToListAsync();
+			return await _context.Employees
+				.Include(e => e.PhoneNumbers)
+				.ToListAsync();
 		}
 
 		/// <summary>
@@ -75,7 +77,10 @@ namespace EmployeeManager.Data.Repositories
 
 		private async Task<Employee> FindEmployeeById(long id)
 		{
-			var employee = await _context.Employees.FindAsync(id);
+			var employee = await _context.Employees
+				.Include(p => p.PhoneNumbers)
+				.Where(e => e.Id.Equals(id))
+				.FirstOrDefaultAsync();
 
 			if (employee is not null)
 			{

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EmployeeManager.Application\EmployeeManager.Application.csproj" />
     <ProjectReference Include="..\EmployeeManager.Data\EmployeeManager.Data.csproj" />
   </ItemGroup>
 
