@@ -1,6 +1,6 @@
 ﻿namespace EmployeeManager.Domain.Enums
 {
-	internal enum ERoleType
+	public enum ERoleType
 	{
 		Admin,
 		President,

@@ -1,0 +1,7 @@
+﻿CREATE TABLE IF NOT EXISTS `PhoneNumbers` (
+  `Id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `Number` VARCHAR(20) NOT NULL,
+  `EmployeeId` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`Id`),
+  FOREIGN KEY (`EmployeeId`) REFERENCES `Employees`(`Id`)
+)
