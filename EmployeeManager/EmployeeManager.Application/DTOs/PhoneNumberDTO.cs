@@ -6,6 +6,7 @@ namespace EmployeeManager.Application.DTOs
 	{
 		public string Number { get; set; }
 
+		#nullable enable
 		public long? EmployeeId { get; set; }
 
 		public PhoneNumberDTO() { }

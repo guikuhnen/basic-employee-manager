@@ -12,7 +12,6 @@ namespace EmployeeManager.Application.DTOs
 		public List<PhoneNumberDTO>? PhoneNumbers { get; set; }
 		public long? ManagerId { get; set; }
 		public ERoleType Role { get; set; }
-		public string Password { get; set; }
 		public DateTime BirthDate { get; set; }
 		public bool Active { get; set; }
 
@@ -34,7 +33,6 @@ namespace EmployeeManager.Application.DTOs
 			PhoneNumbers = employee.PhoneNumbers?.Select(p => new PhoneNumberDTO(p)).ToList();
 			ManagerId = employee.ManagerId;
 			Role = employee.Role;
-			Password = employee.Password;
 			BirthDate = employee.BirthDate;
 			Active = employee.Active;
 

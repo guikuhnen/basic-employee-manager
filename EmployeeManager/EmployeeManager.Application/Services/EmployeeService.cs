@@ -176,7 +176,6 @@ namespace EmployeeManager.Application.Services
 				null,
 				manager,
 				employee.Role,
-				employee.Password,
 				employee.BirthDate,
 				employee.Active
 			);

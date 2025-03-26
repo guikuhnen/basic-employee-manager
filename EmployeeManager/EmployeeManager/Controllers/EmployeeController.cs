@@ -1,12 +1,13 @@
 using EmployeeManager.Application.DTOs;
 using EmployeeManager.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace EmployeeManager.API.Controllers
 {
 	[ApiController]
-	//[Authorize("Bearer")]
+	[Authorize("Bearer")]
 	[Route("[controller]")]
     public class EmployeeController(ILogger<EmployeeController> logger, IEmployeeService employeeService) : ControllerBase
     {

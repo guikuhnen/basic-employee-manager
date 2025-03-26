@@ -6,11 +6,8 @@
   `DocumentNumber` VARCHAR(20) NOT NULL UNIQUE,
   `ManagerId` BIGINT(20) NULL DEFAULT NULL,
   `Role` INT(2) NOT NULL,
-  `Password` VARCHAR(130) NOT NULL,
   `BirthDate` DATETIME(6) NOT NULL,
   `Active` BIT(1) NOT NULL,
-  `RefreshToken` VARCHAR(500) NULL DEFAULT '0',
-  `RefreshTokenExpiryTime` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`Id`),
   FOREIGN KEY (`ManagerId`) REFERENCES `Employees`(`Id`)
 )

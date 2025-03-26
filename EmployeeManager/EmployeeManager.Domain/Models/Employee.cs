@@ -17,7 +17,7 @@ namespace EmployeeManager.Domain.Models
 		[DataType(DataType.EmailAddress), EmailAddress(ErrorMessage = "Enter a valid e-mail."), MaxLength(40)]
 		public required string Email { get; set; }
 
-		[DatabaseGenerated(DatabaseGeneratedOption.None), Display(Name = "Document Number"), StringLength(20, MinimumLength = 6, ErrorMessage = "{0} size should be between {2} and {1} characters.")]
+		[Display(Name = "Document Number"), StringLength(20, MinimumLength = 6, ErrorMessage = "{0} size should be between {2} and {1} characters.")]
 		public required string DocumentNumber { get; set; }
 
 		public List<PhoneNumber>? PhoneNumbers { get; set; }
@@ -29,22 +29,15 @@ namespace EmployeeManager.Domain.Models
 		[Display(Name ="Role")]
 		public required ERoleType Role { get; set; }
 
-		[DataType(DataType.Password)]
-		public required string Password { get; set; }
-
 		[Display(Name = "Birth Date"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}"), Required(AllowEmptyStrings = false, ErrorMessage = "Inform {0}.")]
 		public required DateTime BirthDate { get; set; }
 
 		public required bool Active { get; set; }
 
-		public string? RefreshToken { get; set; }
-
-		public DateTime? RefreshTokenExpiryTime { get; set; }
-
 		public Employee() { }
 
 		[SetsRequiredMembers]
-		public Employee(string firstName, string lastName, string email, string documentNumber, List<PhoneNumber>? phoneNumbers, Employee? manager, ERoleType role, string password, DateTime birthDate, bool active)
+		public Employee(string firstName, string lastName, string email, string documentNumber, List<PhoneNumber>? phoneNumbers, Employee? manager, ERoleType role, DateTime birthDate, bool active)
 		{
 			FirstName = firstName;
 			LastName = lastName;
@@ -53,7 +46,6 @@ namespace EmployeeManager.Domain.Models
 			PhoneNumbers = phoneNumbers;
 			Manager = manager;
 			Role = role;
-			Password = password;
 			BirthDate = birthDate;
 			Active = active;
 		}
