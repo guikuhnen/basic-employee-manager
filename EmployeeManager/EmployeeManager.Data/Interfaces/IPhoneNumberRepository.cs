@@ -19,10 +19,10 @@ namespace EmployeeManager.Data.Interfaces
 		Task<IEnumerable<PhoneNumber>?> GetAllPhoneNumbersByEmployeeId(long employeeId);
 
 		/// <summary>
-		/// Update many phone numbers in the database
+		/// Delete many phone numbers from the database by employee id
 		/// </summary>
-		/// <param name="phoneNumbers"></param>
+		/// <param name="employeeId"></param>
 		/// <returns></returns>
-		Task UpdatePhoneNumbers(List<PhoneNumber> phoneNumbers);
+		Task DeletePhoneNumbersByEmployeeId(long employeeId);
 	}
 }

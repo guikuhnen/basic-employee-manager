@@ -114,14 +114,14 @@ namespace EmployeeManager.Application.Services
 
 				var updateEmployee = await ConvertEmployeeDTODomain(employee, true);
 
-				await _repository.UpdateEmployee(updateEmployee);
-
 				if (updateEmployee.PhoneNumbers?.Count > 0)
 				{
 					_logger.LogInformation("EmployeeService - UpdateEmployee - PhoneNumbers");
 
-					await _phoneNumberRepository.UpdatePhoneNumbers(updateEmployee.PhoneNumbers);
+					await _phoneNumberRepository.DeletePhoneNumbersByEmployeeId(updateEmployee.Id);
 				}
+
+				await _repository.UpdateEmployee(updateEmployee);
 
 				_logger.LogInformation("EmployeeService - UpdateEmployee - End");
 			}

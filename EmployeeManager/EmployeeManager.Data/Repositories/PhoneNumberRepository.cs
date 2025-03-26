@@ -16,7 +16,9 @@ namespace EmployeeManager.Data.Repositories
 		/// <returns></returns>
 		public async Task AddPhoneNumbers(List<PhoneNumber> phoneNumbers)
 		{
-			await CreatePhoneNumbers(phoneNumbers);
+			await _context.AddRangeAsync(phoneNumbers);
+
+			await _context.SaveChangesAsync();
 		}
 
 		/// <summary>
@@ -30,30 +32,23 @@ namespace EmployeeManager.Data.Repositories
 		}
 
 		/// <summary>
-		/// Update many phone numbers in the database
+		/// Delete many phone numbers from the database by employee id
 		/// </summary>
-		/// <param name="phoneNumbers"></param>
+		/// <param name="employeeId"></param>
 		/// <returns></returns>
-		public async Task UpdatePhoneNumbers(List<PhoneNumber> phoneNumbers)
+		public async Task DeletePhoneNumbersByEmployeeId(long employeeId)
 		{
-			var phonesToRemove = await FindPhoneNumbersByEmployeeId(phoneNumbers.First().EmployeeId);
+			var phonesToRemove = await FindPhoneNumbersByEmployeeId(employeeId);
 
-			if (phonesToRemove is not null)
+			if (phonesToRemove?.Count() > 0)
 			{
 				_context.RemoveRange(phonesToRemove);
 			}
 
-			await CreatePhoneNumbers(phoneNumbers);
+			await _context.SaveChangesAsync();
 		}
 
 		#region PRIVATE
-
-		private async Task CreatePhoneNumbers(List<PhoneNumber> phoneNumbers)
-		{
-			await _context.AddRangeAsync(phoneNumbers);
-
-			await _context.SaveChangesAsync();
-		}
 
 		private async Task<IEnumerable<PhoneNumber>?> FindPhoneNumbersByEmployeeId(long employeeId)
 		{
