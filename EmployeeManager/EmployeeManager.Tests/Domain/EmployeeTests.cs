@@ -8,10 +8,11 @@ namespace EmployeeManager.Tests.Domain
 		public void TestEmployee_IsMinor_Returns_False()
 		{
 			//Arrange
-			DataMocks.EmployeePresident.BirthDate = DateTime.Now.AddYears(-18);
+			var employee = new DataMocks().EmployeePresident;
+			employee.BirthDate = DateTime.Now.AddYears(-18);
 
 			//Act
-			var result = DataMocks.EmployeePresident.IsMinor();
+			var result = employee.IsMinor();
 
 			//Assert
 			Assert.False(result);
@@ -21,10 +22,11 @@ namespace EmployeeManager.Tests.Domain
 		public void TestEmployee_IsMinor_Returns_True()
 		{
 			//Arrange
-			DataMocks.EmployeePresident.BirthDate = DateTime.Now.AddYears(-17);
+			var employee = new DataMocks().EmployeePresident;
+			employee.BirthDate = DateTime.Now.AddYears(-17);
 
 			//Act
-			var result = DataMocks.EmployeePresident.IsMinor();
+			var result = employee.IsMinor();
 
 			//Assert
 			Assert.True(result);
@@ -34,8 +36,11 @@ namespace EmployeeManager.Tests.Domain
 		public void TestEmployee_CanBeManager_Returns_True()
 		{
 			//Arrange
+			var employee = new DataMocks().EmployeePresident;
+			var manager = new DataMocks().EmployeeDirector;
+
 			//Act
-			var result = DataMocks.EmployeePresident.CanBeManager(DataMocks.EmployeeDirector.Role);
+			var result = employee.CanBeManager(manager.Role);
 
 			//Assert
 			Assert.True(result);
@@ -45,8 +50,11 @@ namespace EmployeeManager.Tests.Domain
 		public void TestEmployee_CanBeManager_Returns_False()
 		{
 			//Arrange
+			var employee = new DataMocks().EmployeeDirector;
+			var manager = new DataMocks().EmployeePresident;
+
 			//Act
-			var result = DataMocks.EmployeeDirector.CanBeManager(DataMocks.EmployeePresident.Role);
+			var result = employee.CanBeManager(manager.Role);
 
 			//Assert
 			Assert.False(result);

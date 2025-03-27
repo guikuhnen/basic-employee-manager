@@ -21,8 +21,8 @@ namespace EmployeeManager.Application.Interfaces
 		/// <summary>
 		/// Revokes the token for the given user
 		/// </summary>
-		/// <param name="userName"></param>
+		/// <param name="userDoc"></param>
 		/// <returns>bool</returns>
-		bool RevokeToken(string userName);
+		bool RevokeToken(string userDoc);
 	}
 }

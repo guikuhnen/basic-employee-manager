@@ -64,8 +64,8 @@ namespace EmployeeManager.Application.Services
 
 			var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
 
-			var userName = principal.Identity?.Name;
-			var user = _userRepository.ValidateCredentials(userName ?? string.Empty);
+			var userDoc = principal.Identity?.Name;
+			var user = _userRepository.ValidateCredentials(userDoc ?? string.Empty);
 
 			if (user == null
 				|| user.RefreshToken != refreshToken
@@ -83,11 +83,11 @@ namespace EmployeeManager.Application.Services
 		/// <summary>
 		/// Revokes the token for the given user
 		/// </summary>
-		/// <param name="userName"></param>
+		/// <param name="userDoc"></param>
 		/// <returns>bool</returns>
-		public bool RevokeToken(string userName)
+		public bool RevokeToken(string userDoc)
 		{
-			return _userRepository.RevokeToken(userName);
+			return _userRepository.RevokeToken(userDoc);
 		}
 
 		#region PRIVATE

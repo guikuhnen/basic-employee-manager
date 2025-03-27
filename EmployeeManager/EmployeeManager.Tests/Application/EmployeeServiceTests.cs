@@ -1,4 +1,3 @@
-using EmployeeManager.Application.DTOs;
 using EmployeeManager.Application.Services;
 using EmployeeManager.Data.Interfaces;
 using EmployeeManager.Domain.Models;
@@ -29,9 +28,10 @@ namespace EmployeeManager.Tests.Application
 			_employeeRepositoryMock.Setup(x => x.AddEmployee(It.IsAny<Employee>())).Returns(Task.CompletedTask);
 			_phoneNumberRepositoryMock.Setup(x => x.AddPhoneNumbers(It.IsAny<List<PhoneNumber>>())).Returns(Task.CompletedTask);
 			_userRepositoryMock.Setup(x => x.AddUser(It.IsAny<User>())).Returns(Task.CompletedTask);
+			var employee = new DataMocks().EmployeePresidentDTO;
 
 			//Act
-			var result = _service.AddEmployee(DataMocks.EmployeePresidentDTO);
+			var result = _service.AddEmployee(employee);
 
 			//Assert
 			Assert.NotNull(result);
@@ -45,7 +45,38 @@ namespace EmployeeManager.Tests.Application
 			_employeeRepositoryMock.Setup(x => x.AddEmployee(It.IsAny<Employee>())).Throws(It.IsAny<Exception>());
 
 			//Act
-			var result = _service.AddEmployee(DataMocks.EmployeePresidentDTO);
+			var result = _service.AddEmployee(new DataMocks().EmployeePresidentDTO);
+
+			//Assert
+			Assert.NotNull(result.Exception);
+			Assert.False(result.IsCompletedSuccessfully);
+		}
+
+		[Fact]
+		public void Test_AddEmployee_Invalid_Manager_Throws_Exception()
+		{
+			//Arrange
+			_employeeRepositoryMock.Setup(x => x.GetEmployee(It.IsAny<long>())).ReturnsAsync(new DataMocks().EmployeeDirector);
+			var employeePresidentDTO = new DataMocks().EmployeePresidentDTO;
+			employeePresidentDTO.ManagerId = new DataMocks().EmployeeDirector.Id;
+
+			//Act
+			var result = _service.AddEmployee(employeePresidentDTO);
+
+			//Assert
+			Assert.NotNull(result.Exception);
+			Assert.False(result.IsCompletedSuccessfully);
+		}
+
+		[Fact]
+		public void Test_AddEmployee_IsMinor_Throws_Exception()
+		{
+			//Arrange
+			var employeePresidentDTO = new DataMocks().EmployeePresidentDTO;
+			employeePresidentDTO.BirthDate = new DateTime(2020, 09, 18);
+
+			//Act
+			var result = _service.AddEmployee(employeePresidentDTO);
 
 			//Assert
 			Assert.NotNull(result.Exception);
@@ -56,7 +87,7 @@ namespace EmployeeManager.Tests.Application
 		public async void Test_GetAllEmployees_Returns_Two_Itens()
 		{
 			//Arrange
-			_employeeRepositoryMock.Setup(x => x.GetAllEmployees()).ReturnsAsync([DataMocks.EmployeePresident, DataMocks.EmployeeDirector]);
+			_employeeRepositoryMock.Setup(x => x.GetAllEmployees()).ReturnsAsync([new DataMocks().EmployeePresident, new DataMocks().EmployeeDirector]);
 
 			//Act
 			var result = await _service.GetAllEmployees();
@@ -100,14 +131,14 @@ namespace EmployeeManager.Tests.Application
 		public async void Test_GetEmployee_Returns_Employee()
 		{
 			//Arrange
-			_employeeRepositoryMock.Setup(x => x.GetEmployee(It.IsAny<long>())).ReturnsAsync(DataMocks.EmployeePresident);
+			_employeeRepositoryMock.Setup(x => x.GetEmployee(It.IsAny<long>())).ReturnsAsync(new DataMocks().EmployeePresident);
 
 			//Act
 			var result = await _service.GetEmployee(It.IsAny<long>());
 
 			//Assert
 			Assert.NotNull(result);
-			Assert.Equal(DataMocks.EmployeePresidentDTO.Id, result.Id);
+			Assert.Equal(new DataMocks().EmployeePresidentDTO.Id, result.Id);
 		}
 
 		[Fact]
@@ -133,7 +164,7 @@ namespace EmployeeManager.Tests.Application
 			_userRepositoryMock.Setup(x => x.UpdatePassword(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
 
 			//Act
-			var result = _service.UpdateEmployee(DataMocks.EmployeePresidentDTO);
+			var result = _service.UpdateEmployee(new DataMocks().EmployeePresidentDTO);
 
 			//Assert
 			Assert.NotNull(result);
@@ -147,7 +178,7 @@ namespace EmployeeManager.Tests.Application
 			_phoneNumberRepositoryMock.Setup(x => x.DeletePhoneNumbersByEmployeeId(It.IsAny<long>())).Throws(It.IsAny<Exception>());
 
 			//Act
-			var result = _service.UpdateEmployee(DataMocks.EmployeePresidentDTO);
+			var result = _service.UpdateEmployee(new DataMocks().EmployeePresidentDTO);
 
 			//Assert
 			Assert.NotNull(result.Exception);
@@ -186,14 +217,14 @@ namespace EmployeeManager.Tests.Application
 		public async void Test_GetEmployeeByDocument_Returns_EmployeeDTO()
 		{
 			//Arrange
-			_employeeRepositoryMock.Setup(x => x.GetEmployeeByDocument(It.IsAny<string>())).ReturnsAsync(DataMocks.EmployeePresident);
+			_employeeRepositoryMock.Setup(x => x.GetEmployeeByDocument(It.IsAny<string>())).ReturnsAsync(new DataMocks().EmployeePresident);
 
 			//Act
 			var result = await _service.GetEmployeeByDocument(It.IsAny<string>());
 
 			//Assert
 			Assert.NotNull(result);
-			Assert.Equal(DataMocks.EmployeePresidentDTO.Id, result.Id);
+			Assert.Equal(new DataMocks().EmployeePresidentDTO.Id, result.Id);
 		}
 
 		[Fact]
