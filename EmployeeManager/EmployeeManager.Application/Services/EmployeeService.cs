@@ -35,7 +35,7 @@ namespace EmployeeManager.Application.Services
 				{
 					_logger.LogInformation("EmployeeService - AddEmployee - PhoneNumbers");
 
-					List<PhoneNumber> phoneNumbers = employee.PhoneNumbers.Select(p => new PhoneNumber(p.Number, newEmployee)).ToList();
+					var phoneNumbers = employee.PhoneNumbers.Select(p => new PhoneNumber(p.Number, newEmployee)).ToList();
 
 					await _phoneNumberRepository.AddPhoneNumbers(phoneNumbers);
 				}

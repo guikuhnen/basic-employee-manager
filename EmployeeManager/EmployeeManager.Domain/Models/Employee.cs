@@ -52,7 +52,7 @@ namespace EmployeeManager.Domain.Models
 
 		public bool IsMinor()
 		{
-			return BirthDate.AddYears(18) > DateTime.Now;
+			return BirthDate.AddYears(18).Date > DateTime.Now.Date;
 		}
 
 		public bool CanBeManager(ERoleType employeeRole)
