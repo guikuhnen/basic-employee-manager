@@ -30,10 +30,11 @@ namespace EmployeeManager.Tests.Utils
 
 		public DataMocks()
 		{
-			EmployeePresident.PhoneNumbers = [new PhoneNumber("47991075595", EmployeePresident)];
+			EmployeePresident.PhoneNumbers = [new PhoneNumber("47991075595", EmployeePresident), new PhoneNumber("47991075596", EmployeePresident)];
 			EmployeePresidentDTO = new(EmployeePresident);
 
 			EmployeeDirector.Manager = EmployeePresident;
+			EmployeeDirector.PhoneNumbers = [new PhoneNumber("47991075597", EmployeePresident)];
 		}
 	}
 }
