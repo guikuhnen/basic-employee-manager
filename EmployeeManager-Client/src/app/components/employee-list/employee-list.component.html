@@ -1,0 +1,92 @@
+<div class="container">
+  <div class="table-container mt-4 p-4">
+    <h2>Employee Dashboard</h2>
+    <div class="row mb-3">
+      <div class="col">
+        <button class="btn btn-primary" (click)="redirectToAdd()">
+          Add Employee
+        </button>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered custom-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>DocumentNumber</th>
+            <th>PhoneNumbers</th>
+            <th>Manager</th>
+            <th>Role</th>
+            <th>BirthDate</th>
+            <th>Active</th>
+            <th></th>
+          </tr>
+        </thead>
+        @if (isLoading) {
+        <tbody>
+          <tr>
+            <td colspan="12" class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        } @else if (dataSource.length > 0) {
+        <tbody>
+          @for ( item of dataSource; track $index ) {
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.email }}</td>
+            <td>{{ item.documentNumber }}</td>
+            <td>
+              @if ( item.phoneNumbers.length > 0 ) { @for ( phone of
+              item.phoneNumbers; track $index ) {
+              <span> {{ phone.number }} <br /> </span>
+              } } @else {
+              {{ "-" }}
+              }
+            </td>
+            <td>{{ item.managerId || "-" }}</td>
+            <td>{{ item.role }}</td>
+            <td>{{ item.birthDate | date : "dd/MM/yyyy" }}</td>
+            <td>{{ item.active }}</td>
+            <td>
+              <!-- @if (item.id > 1) { -->
+                <button
+                  class="btn btn-primary"
+                  (click)="redirectToEdit(item.id)"
+                  title="Edit"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn btn-danger"
+                  (click)="deleteEmployee(item.id)"
+                  title="Delete"
+                >
+                  Delete
+                </button>
+              <!-- } @else {
+                {{ "-" }}
+              } -->
+            </td>
+          </tr>
+          }
+        </tbody>
+        } @else {
+        <tbody>
+          <tr>
+            <td colspan="12" class="text-center">
+              <p class="text-muted">No data found</p>
+            </td>
+          </tr>
+        </tbody>
+        }
+      </table>
+    </div>
+  </div>
+</div>

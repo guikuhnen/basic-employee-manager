@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="row justify-content-center pt-5">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0">Login</h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="document" class="form-label">Document</label>
+              <input
+                type="text"
+                class="form-control"
+                id="document"
+                formControlName="document"
+                required
+              />
+              @if ( loginForm.get('document')?.invalid &&
+              (loginForm.get('document')?.dirty ||
+              loginForm.get('document')?.touched) ) {
+              <div class="text-danger">Please enter a valid Document</div>
+              }
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                required
+              />
+              @if ( loginForm.get('password')?.invalid &&
+              (loginForm.get('password')?.dirty ||
+              loginForm.get('password')?.touched) ) {
+              <div class="text-danger">Password is required</div>
+              }
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary w-100"
+              [disabled]="loginForm.invalid"
+            >
+              Login
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
