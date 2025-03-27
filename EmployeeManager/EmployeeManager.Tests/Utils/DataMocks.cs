@@ -32,6 +32,7 @@ namespace EmployeeManager.Tests.Utils
 		{
 			EmployeePresident.PhoneNumbers = [new PhoneNumber("47991075595", EmployeePresident)];
 			EmployeePresidentDTO = new(EmployeePresident);
+
 			EmployeeDirector.Manager = EmployeePresident;
 		}
 	}
