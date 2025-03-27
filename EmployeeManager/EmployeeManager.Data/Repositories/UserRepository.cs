@@ -1,6 +1,7 @@
 ﻿using EmployeeManager.Data.Context;
 using EmployeeManager.Data.Interfaces;
 using EmployeeManager.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace EmployeeManager.Data.Repositories
 	{
 		private readonly MySQLContext _context = context;
 
+		#region LOGIN
+
 		public User? ValidateCredentials(User user)
 		{
-			var pass = ComputeHash(user.Password, SHA256.Create());
+			var hashPass = ComputeHash(user.Password, SHA256.Create());
 
-			return _context.Users.FirstOrDefault(u => (u.UserDocument == user.UserDocument) && (u.Password == pass));
+			return _context.Users.FirstOrDefault(u => (u.UserDocument == user.UserDocument) && (u.Password == hashPass));
 		}
 
 		public User? ValidateCredentials(string userDocument)
@@ -58,6 +61,50 @@ namespace EmployeeManager.Data.Repositories
 
 			return true;
 		}
+
+		#endregion
+
+		#region CRUD
+
+		/// <summary>
+		/// Adds a new user to the database
+		/// </summary>
+		/// <param name="user"></param>
+		/// <returns></returns>
+		public async Task AddUser(User user)
+		{
+			var hashPass = ComputeHash(user.Password, SHA256.Create());
+
+			user.Password = hashPass;
+
+			_context.Add(user);
+
+			await _context.SaveChangesAsync();
+		}
+
+		/// <summary>
+		/// Updates the user password in the database
+		/// </summary>
+		/// <param name="documentNumber"></param>
+		/// <param name="password"></param>
+		/// <returns></returns>
+		public async Task UpdatePassword(string documentNumber, string password)
+		{
+			var user = await _context.Users.Where(u => u.UserDocument.Equals(documentNumber)).FirstOrDefaultAsync();
+
+			if (user is not null)
+			{
+				var hashPass = ComputeHash(password, SHA256.Create());
+
+				user.Password = hashPass;
+
+				_context.Update(user);
+
+				await _context.SaveChangesAsync();
+			}
+		}
+
+		#endregion
 
 		#region PRIVATE
 

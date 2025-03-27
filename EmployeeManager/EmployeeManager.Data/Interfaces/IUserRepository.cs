@@ -31,5 +31,20 @@ namespace EmployeeManager.Data.Interfaces
 		/// <param name="userDocument"></param>
 		/// <returns></returns>
 		bool RevokeToken(string userDocument);
+
+		/// <summary>
+		/// Adds a new user to the database
+		/// </summary>
+		/// <param name="user"></param>
+		/// <returns></returns>
+		Task AddUser(User user);
+
+		/// <summary>
+		/// Updates the user password in the database
+		/// </summary>
+		/// <param name="documentNumber"></param>
+		/// <param name="password"></param>
+		/// <returns></returns>
+		Task UpdatePassword(string documentNumber, string password);
 	}
 }

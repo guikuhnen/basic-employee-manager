@@ -37,5 +37,12 @@ namespace EmployeeManager.Application.Interfaces
 		/// <param name="id"></param>
 		/// <returns></returns>
 		Task DeleteEmployee(long id);
+
+		/// <summary>
+		/// Get an employee by their document number
+		/// </summary>
+		/// <param name="document"></param>
+		/// <returns>EmployeeDTO</returns>
+		Task<EmployeeDTO> GetEmployeeByDocument(string document);
 	}
 }

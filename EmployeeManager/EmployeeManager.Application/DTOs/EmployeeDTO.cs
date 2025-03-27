@@ -17,7 +17,8 @@ namespace EmployeeManager.Application.DTOs
 
 		#region CUSTOM
 
-		public string? Name { get; set; }
+		public string Name { get; set; }
+		public string Password { get; set; }
 
 		#endregion
 

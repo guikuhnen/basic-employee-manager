@@ -8,11 +8,13 @@ namespace EmployeeManager.Application.Services
 {
 	public class EmployeeService(ILogger<EmployeeService> logger,
 		IEmployeeRepository repository,
-		IPhoneNumberRepository phoneNumberRepository) : IEmployeeService
+		IPhoneNumberRepository phoneNumberRepository,
+		IUserRepository userRepository) : IEmployeeService
 	{
 		private readonly ILogger<EmployeeService> _logger = logger;
 		private readonly IEmployeeRepository _repository = repository;
 		private readonly IPhoneNumberRepository _phoneNumberRepository = phoneNumberRepository;
+		private readonly IUserRepository _userRepository = userRepository;
 
 		/// <summary>
 		/// Add an employee to the database
@@ -37,6 +39,9 @@ namespace EmployeeManager.Application.Services
 
 					await _phoneNumberRepository.AddPhoneNumbers(phoneNumbers);
 				}
+
+				// Create User
+				await _userRepository.AddUser(new User(employee.DocumentNumber, employee.Password, employee.Name));
 
 				_logger.LogInformation("EmployeeService - AddEmployee - End");
 			}
@@ -123,6 +128,9 @@ namespace EmployeeManager.Application.Services
 
 				await _repository.UpdateEmployee(updateEmployee);
 
+				// Update existing user password
+				await _userRepository.UpdatePassword(employee.DocumentNumber, employee.Password);
+
 				_logger.LogInformation("EmployeeService - UpdateEmployee - End");
 			}
 			catch (Exception e)
@@ -151,6 +159,33 @@ namespace EmployeeManager.Application.Services
 			catch (Exception e)
 			{
 				var errorMessage = $"EmployeeService - DeleteEmployee - ERROR - {e.Message}";
+				_logger.LogError("{Message}", errorMessage);
+				throw;
+			}
+		}
+
+		/// <summary>
+		/// Get an employee by their document number
+		/// </summary>
+		/// <param name="document"></param>
+		/// <returns>Employee</returns>
+		public async Task<EmployeeDTO> GetEmployeeByDocument(string document)
+		{
+			try
+			{
+				_logger.LogInformation("EmployeeService - GetEmployeeByDocument - Begin");
+
+				var employee = await _repository.GetEmployeeByDocument(document);
+
+				var result = new EmployeeDTO(employee);
+
+				_logger.LogInformation("EmployeeService - GetEmployeeByDocument - End");
+
+				return result;
+			}
+			catch (Exception e)
+			{
+				var errorMessage = $"EmployeeService - GetEmployeeByDocument - ERROR - {e.Message}";
 				_logger.LogError("{Message}", errorMessage);
 				throw;
 			}

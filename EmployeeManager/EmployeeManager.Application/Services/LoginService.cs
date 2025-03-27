@@ -8,12 +8,13 @@ using System.Security.Claims;
 
 namespace EmployeeManager.Application.Services
 {
-	public class LoginService(TokenConfiguration configuration, IUserRepository userRepository, ITokenService tokenService) : ILoginService
+	public class LoginService(TokenConfiguration configuration, IUserRepository userRepository, ITokenService tokenService, IEmployeeService employeeService) : ILoginService
 	{
 		private const string DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 		private readonly IUserRepository _userRepository = userRepository;
 		private readonly ITokenService _tokenService = tokenService;
+		private readonly IEmployeeService _employeeService = employeeService;
 		private readonly TokenConfiguration _configuration = configuration;
 
 		/// <summary>
@@ -26,8 +27,18 @@ namespace EmployeeManager.Application.Services
 			var userConvert = new User(userCredentials.UserDocument, userCredentials.Password, string.Empty);
 
 			var user = _userRepository.ValidateCredentials(userConvert);
-			if (user == null)
+
+			if (user is null)
+			{
 				return null;
+			}
+
+			// Checks if the employee exists and is active for login
+			var employee = _employeeService.GetEmployeeByDocument(user.UserDocument).GetAwaiter().GetResult();
+			if (employee is null || !employee.Active)
+			{
+				return null;
+			}
 
 			var claims = new List<Claim>
 			{
@@ -59,7 +70,9 @@ namespace EmployeeManager.Application.Services
 			if (user == null
 				|| user.RefreshToken != refreshToken
 				|| user.RefreshTokenExpiryTime <= DateTime.Now)
+			{
 				return null;
+			}
 
 			accessToken = _tokenService.GenerateAccessToken(principal.Claims);
 			refreshToken = _tokenService.GenerateRefreshToken();

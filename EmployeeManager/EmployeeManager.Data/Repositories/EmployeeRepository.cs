@@ -73,6 +73,28 @@ namespace EmployeeManager.Data.Repositories
 			}
 		}
 
+		/// <summary>
+		/// Get an employee by their document number
+		/// </summary>
+		/// <param name="document"></param>
+		/// <returns>Employee</returns>
+		public async Task<Employee> GetEmployeeByDocument(string document)
+		{
+			var employee = await _context.Employees
+				.Include(p => p.PhoneNumbers)
+				.Where(e => e.DocumentNumber.Equals(document))
+				.FirstOrDefaultAsync();
+
+			if (employee is not null)
+			{
+				return employee;
+			}
+			else
+			{
+				throw new Exception("Employee not found.");
+			}
+		}
+
 		#region PRIVATE
 
 		private async Task<Employee> FindEmployeeById(long id)
