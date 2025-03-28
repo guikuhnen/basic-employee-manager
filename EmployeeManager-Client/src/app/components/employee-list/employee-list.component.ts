@@ -35,7 +35,6 @@ export class EmployeeListComponent {
           this.dataSource = response;
           this.dataSource.forEach(element => {
             if (element.managerId) {
-              console.log(element);
               element.managerName = this.dataSource.filter(x => x.id == element.managerId)[0].name;
             }
           });
