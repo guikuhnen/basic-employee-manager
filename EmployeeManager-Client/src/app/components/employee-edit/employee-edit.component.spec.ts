@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EmployeeEditComponent } from './employee-edit.component';
+import { ActivatedRoute } from '@angular/router';
 
 describe('EmployeeEditComponent', () => {
   let component: EmployeeEditComponent;
@@ -8,7 +9,19 @@ describe('EmployeeEditComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmployeeEditComponent]
+      imports: [EmployeeEditComponent],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: {
+                get: () => 1
+              }
+            }
+          }
+        }
+      ]
     })
     .compileComponents();
 
