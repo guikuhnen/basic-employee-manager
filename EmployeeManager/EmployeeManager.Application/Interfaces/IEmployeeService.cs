@@ -8,8 +8,9 @@ namespace EmployeeManager.Application.Interfaces
 		/// Add an employee to the database
 		/// </summary>
 		/// <param name="employee"></param>
+		/// <param name="authenticatedUserDocument"></param>
 		/// <returns></returns>
-		Task AddEmployee(EmployeeDTO employee);
+		Task AddEmployee(EmployeeDTO employee, string? authenticatedUserDocument);
 
 		/// <summary>
 		/// Get all employees from the database

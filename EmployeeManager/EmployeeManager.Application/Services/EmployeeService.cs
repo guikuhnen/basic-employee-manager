@@ -3,6 +3,7 @@ using EmployeeManager.Application.Interfaces;
 using EmployeeManager.Data.Interfaces;
 using EmployeeManager.Domain.Models;
 using Microsoft.Extensions.Logging;
+using System.Reflection.Metadata;
 
 namespace EmployeeManager.Application.Services
 {
@@ -20,14 +21,25 @@ namespace EmployeeManager.Application.Services
 		/// Add an employee to the database
 		/// </summary>
 		/// <param name="employee"></param>
+		/// <param name="authenticatedUserDocument"></param>
 		/// <returns></returns>
-		public async Task AddEmployee(EmployeeDTO employee)
+		public async Task AddEmployee(EmployeeDTO employee, string? authenticatedUserDocument)
 		{
 			try
 			{
 				_logger.LogInformation("EmployeeService - AddEmployee - Begin");
 
 				var newEmployee = await ConvertEmployeeDTODomain(employee, false);
+
+				if (authenticatedUserDocument is not null)
+				{
+					var authenticatedEmployee = await _repository.GetEmployeeByDocument(authenticatedUserDocument);
+
+					if ((int)authenticatedEmployee.Role > (int)newEmployee.Role)
+					{
+						throw new Exception("This employee don't have enoungh permission to create an elevated employee.");
+					}
+				}
 
 				await _repository.AddEmployee(newEmployee);
 

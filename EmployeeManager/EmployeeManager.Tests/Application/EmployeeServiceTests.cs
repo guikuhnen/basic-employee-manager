@@ -31,7 +31,7 @@ namespace EmployeeManager.Tests.Application
 			var employee = new DataMocks().EmployeePresidentDTO;
 
 			//Act
-			var result = _service.AddEmployee(employee);
+			var result = _service.AddEmployee(employee, null);
 
 			//Assert
 			Assert.NotNull(result);
@@ -45,7 +45,7 @@ namespace EmployeeManager.Tests.Application
 			_employeeRepositoryMock.Setup(x => x.AddEmployee(It.IsAny<Employee>())).Throws(It.IsAny<Exception>());
 
 			//Act
-			var result = _service.AddEmployee(new DataMocks().EmployeePresidentDTO);
+			var result = _service.AddEmployee(new DataMocks().EmployeePresidentDTO, null);
 
 			//Assert
 			Assert.NotNull(result.Exception);
@@ -61,7 +61,7 @@ namespace EmployeeManager.Tests.Application
 			employeePresidentDTO.ManagerId = new DataMocks().EmployeeDirector.Id;
 
 			//Act
-			var result = _service.AddEmployee(employeePresidentDTO);
+			var result = _service.AddEmployee(employeePresidentDTO, null);
 
 			//Assert
 			Assert.NotNull(result.Exception);
@@ -76,7 +76,7 @@ namespace EmployeeManager.Tests.Application
 			employeePresidentDTO.BirthDate = new DateTime(2020, 09, 18);
 
 			//Act
-			var result = _service.AddEmployee(employeePresidentDTO);
+			var result = _service.AddEmployee(employeePresidentDTO, null);
 
 			//Assert
 			Assert.NotNull(result.Exception);

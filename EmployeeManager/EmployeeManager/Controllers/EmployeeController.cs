@@ -27,7 +27,7 @@ namespace EmployeeManager.API.Controllers
 					return BadRequest();
 				}
 
-				await _employeeService.AddEmployee(employee);
+				await _employeeService.AddEmployee(employee, User.Identity?.Name);
 
 				return NoContent();
 			}
