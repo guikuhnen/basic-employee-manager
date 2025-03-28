@@ -1,12 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Token } from '../../shared/models/auth/token';
 import { User } from '../../shared/models/auth/user';
@@ -16,8 +15,6 @@ import { User } from '../../shared/models/auth/user';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    JsonPipe,
-    RouterLink,
     HttpClientModule
   ],
   templateUrl: './login.component.html',
@@ -39,7 +36,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  public submit() {
     const { document, password } = this.loginForm.value;
 
     this.http.post<Token>('http://localhost:55000/auth/signin', {
