@@ -53,8 +53,8 @@ export class LoginComponent implements OnInit {
 
       this.router.navigate(['/employee-list']);
     }, (error) => {
-      localStorage.setItem('authenticated', 'false');
-      alert(error);
+      localStorage.clear();
+      alert(error.statusText);
     });
   }
 }

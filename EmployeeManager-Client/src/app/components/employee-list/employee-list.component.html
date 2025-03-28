@@ -1,6 +1,15 @@
 <div class="container">
   <div class="table-container mt-4 p-4">
-    <h2>Employee Dashboard</h2>
+    <div class="row mb-3">
+      <div class="col">
+        <h2>Employee Dashboard</h2>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <button class="btn btn-sm btn-danger" (click)="logoff()" title="Logoff">
+          Logoff
+        </button>
+      </div>
+    </div>
     <div class="row mb-3">
       <div class="col">
         <button class="btn btn-primary" (click)="redirectToAdd()">
@@ -14,12 +23,12 @@
           <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Email</th>
-            <th>DocumentNumber</th>
-            <th>PhoneNumbers</th>
+            <th>E-mail</th>
+            <th>Document Number</th>
+            <th>Phone Numbers</th>
             <th>Manager</th>
             <th>Role</th>
-            <th>BirthDate</th>
+            <th>Birthdate</th>
             <th>Active</th>
             <th></th>
           </tr>
@@ -44,35 +53,37 @@
             <td>{{ item.documentNumber }}</td>
             <td>
               @if ( item.phoneNumbers.length > 0 ) { @for ( phone of
-              item.phoneNumbers; track $index ) {
-              <span> {{ phone.number }} <br /> </span>
+                item.phoneNumbers; track $index ) {
+                <span> {{ phone.number }} <br /> </span>
               } } @else {
-              {{ "-" }}
+                {{ "-" }}
               }
             </td>
             <td>{{ item.managerId || "-" }}</td>
-            <td>{{ item.role }}</td>
+            <td>{{ roles[item.role] }}</td>
             <td>{{ item.birthDate | date : "dd/MM/yyyy" }}</td>
-            <td>{{ item.active }}</td>
+            <td>{{ item.active ? "Yes" : "No" }}</td>
             <td>
-              <!-- @if (item.id > 1) { -->
+              @if (item.id > 1) {
                 <button
-                  class="btn btn-primary"
+                  class="btn btn-sm btn-outline-primary"
                   (click)="redirectToEdit(item.id)"
                   title="Edit"
                 >
                   Edit
                 </button>
-                <button
-                  class="btn btn-danger"
-                  (click)="deleteEmployee(item.id)"
-                  title="Delete"
-                >
-                  Delete
-                </button>
-              <!-- } @else {
+                @if (item.documentNumber !== currentUser && item.active) {
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="deleteEmployee(item.id)"
+                    title="Delete"
+                  >
+                    Delete
+                  </button>
+                }
+              } @else {
                 {{ "-" }}
-              } -->
+              }
             </td>
           </tr>
           }

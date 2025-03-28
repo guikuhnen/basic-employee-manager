@@ -1,1 +1,41 @@
-<p>employee-edit works!</p>
+<div class="container">
+  <div class="form-container">
+    <h2 mat-dialog-title>{{ employeeId > 0 ? "Edit" : "Add" }} Employee</h2>
+    <form [formGroup]="employeeForm">
+      <label for="firstName">First name</label>
+      <input id="firstName" formControlName="firstName" type="text" />
+
+      <label for="lastName">Last name</label>
+      <input id="lastName" formControlName="lastName" type="text" />
+
+      <label for="email">E-mail</label>
+      <input id="email" formControlName="email" type="email" />
+
+      <label for="documentNumber">Document number</label>
+      <input id="documentNumber" formControlName="documentNumber" type="text" />
+
+      <label for="phoneNumbers">Phone numbers</label>
+      <input id="phoneNumbers" formControlName="phoneNumbers" type="tel" />
+
+      <label for="managerId">Manager</label>
+      <input id="managerId" formControlName="managerId" />
+
+      <label for="role">Role</label>
+      <input id="role" formControlName="role" />
+
+      <label for="birthDate">Birthdate</label>
+      <input id="birthDate" formControlName="birthDate" type="date" />
+
+      <label for="password">Password</label>
+      <input id="password" formControlName="password" type="password" />
+    </form>
+    <button
+      type="submit"
+      mat-raised-button
+      color="primary"
+      (click)="submit(employeeForm)"
+    >
+      Submit
+    </button>
+  </div>
+</div>

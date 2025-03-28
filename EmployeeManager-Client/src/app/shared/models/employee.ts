@@ -8,14 +8,14 @@ export class Employee {
   email: string;
   documentNumber: string;
   phoneNumbers: PhoneNumber[];
-  managerId: number;
+  managerId: number | null;
   role: ERoleType;
   birthDate: Date;
   active: boolean;
 
   //#region CUSTOM
 
-  name: string;
+  name: string | null;
   password: string;
 
   //#endregion

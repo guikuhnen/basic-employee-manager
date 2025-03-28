@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { Employee } from '../../shared/models/employee';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ERoleType } from '../../shared/enums/e-role-type';
 
 @Component({
   selector: 'app-employee-list',
@@ -15,22 +16,10 @@ export class EmployeeListComponent {
   private http = inject(HttpClient);
 
   public dataSource: Employee[] = [];
-  private displayedColumns: string[] = [
-    'ID',
-    'Name',
-    'Email',
-    'DocumentNumber',
-    'PhoneNumbers',
-    'Manager',
-    'Role',
-    'BirthDate',
-    'Active',
-    'Edit',
-    'Delete',
-  ];
-
   public isLoading: boolean = true;
   public selectedPerson!: Employee;
+  public roles = ERoleType;
+  public currentUser = localStorage.getItem('userDocument');
 
   constructor(private router: Router) {}
 
@@ -47,7 +36,9 @@ export class EmployeeListComponent {
           this.isLoading = false;
         },
         (error) => {
-          alert(error);
+          localStorage.setItem('authenticated', 'false');
+          alert(error.statusText);
+          this.router.navigate(['/login']);
         }
       );
   }
@@ -61,13 +52,37 @@ export class EmployeeListComponent {
   }
 
   public deleteEmployee(employeeId: number): void {
-    this.http.delete(`http://localhost:55000/employee/${employeeId}`).subscribe(
-      (response) => {
-        this.router.navigate(['/employee-list']);
-      },
-      (error) => {
-        alert(error);
-      }
-    );
+    this.http
+      .delete(`http://localhost:55000/employee/${employeeId}`, {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+      })
+      .subscribe(
+        (response) => {
+          window.location.reload();
+        },
+        (error) => {
+          alert(error.statusText);
+        }
+      );
+  }
+
+  public logoff(): void {
+    this.http
+      .get(`http://localhost:55000/auth/revoke`, {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+      })
+      .subscribe(
+        (response) => {
+          localStorage.clear();
+          this.router.navigate(['/login']);
+        },
+        (error) => {
+          alert(error.statusText);
+        }
+      );
   }
 }
