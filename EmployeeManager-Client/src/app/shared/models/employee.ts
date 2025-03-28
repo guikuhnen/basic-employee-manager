@@ -17,6 +17,7 @@ export class Employee {
 
   name: string | null;
   password: string;
+  managerName: string | null;
 
   //#endregion
 
@@ -32,7 +33,8 @@ export class Employee {
     birthDate: Date,
     active: boolean,
     name: string,
-    password: string
+    password: string,
+    managerName: string
   ) {
     this.id = id;
     this.firstName = firstName;
@@ -46,5 +48,6 @@ export class Employee {
     this.active = active;
     this.name = name;
     this.password = password;
+    this.managerName = managerName;
   }
 }

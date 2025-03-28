@@ -33,6 +33,11 @@ namespace EmployeeManager.API.Controllers
 			}
 			catch (Exception e)
 			{
+				if (e.InnerException is not null)
+				{
+					return ReturnError("Create", e.InnerException.Message);
+				}
+
 				return ReturnError("Create", e.Message);
 			}
 		}
@@ -48,6 +53,11 @@ namespace EmployeeManager.API.Controllers
 			}
 			catch (Exception e)
 			{
+				if (e.InnerException is not null)
+				{
+					return ReturnError("GetAll", e.InnerException.Message);
+				}
+
 				return ReturnError("GetAll", e.Message);
 			}
 		}
@@ -71,6 +81,11 @@ namespace EmployeeManager.API.Controllers
 			}
 			catch (Exception e)
 			{
+				if (e.InnerException is not null)
+				{
+					return ReturnError("Get", e.InnerException.Message);
+				}
+
 				return ReturnError("Get", e.Message);
 			}
 		}
@@ -94,6 +109,11 @@ namespace EmployeeManager.API.Controllers
 			}
 			catch (Exception e)
 			{
+				if (e.InnerException is not null)
+				{
+					return ReturnError("Update", e.InnerException.Message);
+				}
+
 				return ReturnError("Update", e.Message);
 			}
 		}
@@ -111,19 +131,24 @@ namespace EmployeeManager.API.Controllers
 			}
 			catch (Exception e)
 			{
+				if (e.InnerException is not null)
+				{
+					return ReturnError("Delete", e.InnerException.Message);
+				}
+
 				return ReturnError("Delete", e.Message);
 			}
 		}
 
 		#region PRIVATE
 
-		private StatusCodeResult ReturnError(string methodName, string errorMessage)
+		private ObjectResult ReturnError(string methodName, string errorMessage)
 		{
 			var message = $"EmployeeController - {methodName} - ERROR - {errorMessage}";
 
 			_logger.LogError("{Message}", message);
 
-			return StatusCode((int)HttpStatusCode.InternalServerError);
+			return StatusCode((int)HttpStatusCode.InternalServerError, new { message = errorMessage });
 		}
 
 		#endregion

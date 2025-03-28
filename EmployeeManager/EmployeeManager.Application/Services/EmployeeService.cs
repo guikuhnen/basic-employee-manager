@@ -197,7 +197,7 @@ namespace EmployeeManager.Application.Services
 		{
 			var manager = employee.ManagerId.HasValue ? await _repository.GetEmployee(employee.ManagerId.Value) : null;
 
-			if (manager is not null && !manager.CanBeManager(employee.Role))
+			if ((manager is not null && !manager.CanBeManager(employee.Role)) || manager?.Id == employee.Id)
 			{
 				throw new Exception("The employee selected to act like a manager is invalid.");
 			}

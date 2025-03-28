@@ -1,41 +1,151 @@
 <div class="container">
-  <div class="form-container">
-    <h2 mat-dialog-title>{{ employeeId > 0 ? "Edit" : "Add" }} Employee</h2>
+  <div class="form-container mt-4 p-4">
+    <h2>{{ employeeId > 0 ? "Edit" : "Add" }} Employee</h2>
     <form [formGroup]="employeeForm">
-      <label for="firstName">First name</label>
-      <input id="firstName" formControlName="firstName" type="text" />
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label for="firstName" class="form-label">First name</label>
+          <input
+            id="firstName"
+            class="form-control"
+            formControlName="firstName"
+            type="text"
+          />
+          @if ( employeeForm.get('firstName')?.invalid &&
+          (employeeForm.get('firstName')?.dirty ||
+          employeeForm.get('firstName')?.touched) ) {
+          <div class="text-danger">First name is required.</div>
+          }
+        </div>
+        <div class="col-md-4">
+          <label for="lastName" class="form-label">Last name</label>
+          <input
+            id="lastName"
+            class="form-control"
+            formControlName="lastName"
+            type="text"
+          />
+          @if ( employeeForm.get('lastName')?.invalid &&
+          (employeeForm.get('lastName')?.dirty ||
+          employeeForm.get('lastName')?.touched) ) {
+          <div class="text-danger">Last name is required.</div>
+          }
+        </div>
+        <div class="col-md-4">
+          <label for="email" class="form-label">E-mail</label>
+          <input
+            id="email"
+            class="form-control"
+            formControlName="email"
+            type="email"
+          />
+          @if ( employeeForm.get('email')?.invalid &&
+          (employeeForm.get('email')?.dirty ||
+          employeeForm.get('email')?.touched) ) {
+          <div class="text-danger">E-mail is required.</div>
+          }
+        </div>
+      </div>
 
-      <label for="lastName">Last name</label>
-      <input id="lastName" formControlName="lastName" type="text" />
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label for="documentNumber" class="form-label">Document number</label>
+          <input
+            id="documentNumber"
+            formControlName="documentNumber"
+            type="text"
+            class="form-control"
+          />
+          @if ( employeeForm.get('documentNumber')?.invalid &&
+          (employeeForm.get('documentNumber')?.dirty ||
+          employeeForm.get('documentNumber')?.touched) ) {
+          <div class="text-danger">Document number is required.</div>
+          }
+        </div>
+        <div class="col-md-4">
+          <label for="phoneNumbers" class="form-label">Phone numbers (Comma separated)</label>
+          <input
+            id="phoneNumbers"
+            class="form-control"
+            formControlName="phoneNumbers"
+            type="tel"
+          />
+        </div>
+        <div class="col-md-4">
+          <label for="managerId" class="form-label">Manager</label>
+          
 
-      <label for="email">E-mail</label>
-      <input id="email" formControlName="email" type="email" />
+          <select class="form-select" id="managerId" formControlName="managerId">
+            @for (item of managerSelectList | keyvalue; track $index) {
+            <option value={{item.key}}>
+              {{ item.value }}
+            </option>
+            }
+            <option value="" disabled selected>Select a Manager</option>
+          </select>
 
-      <label for="documentNumber">Document number</label>
-      <input id="documentNumber" formControlName="documentNumber" type="text" />
 
-      <label for="phoneNumbers">Phone numbers</label>
-      <input id="phoneNumbers" formControlName="phoneNumbers" type="tel" />
+        </div>
+      </div>
 
-      <label for="managerId">Manager</label>
-      <input id="managerId" formControlName="managerId" />
-
-      <label for="role">Role</label>
-      <input id="role" formControlName="role" />
-
-      <label for="birthDate">Birthdate</label>
-      <input id="birthDate" formControlName="birthDate" type="date" />
-
-      <label for="password">Password</label>
-      <input id="password" formControlName="password" type="password" />
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label for="role" class="form-label">Role</label>
+          <select class="form-select" id="role" formControlName="role">
+            @for (item of roleSelectList | keyvalue; track $index) {
+            <option value={{item.key}}>
+              {{ item.value }}
+            </option>
+            }
+            <option value="" disabled selected>Select the role</option>
+          </select>
+          @if ( employeeForm.get('role')?.invalid &&
+          (employeeForm.get('role')?.dirty || employeeForm.get('role')?.touched)
+          ) {
+          <div class="text-danger">Role is required.</div>
+          }
+        </div>
+        <div class="col-md-4">
+          <label for="birthDate" class="form-label">Birthdate</label>
+          <input
+            id="birthDate"
+            class="form-control"
+            formControlName="birthDate"
+            type="date"
+          />
+          @if ( employeeForm.get('birthDate')?.invalid &&
+          (employeeForm.get('birthDate')?.dirty ||
+          employeeForm.get('birthDate')?.touched) ) {
+          <div class="text-danger">Birthdate is required.</div>
+          }
+        </div>
+        <div class="col-md-4">
+          <label for="password" class="form-label">Password</label>
+          <input
+            id="password"
+            class="form-control"
+            formControlName="password"
+            type="password"
+          />
+          @if ( employeeForm.get('password')?.invalid &&
+          (employeeForm.get('password')?.dirty ||
+          employeeForm.get('password')?.touched) ) {
+          <div class="text-danger">Password is required.</div>
+          }
+        </div>
+      </div>
     </form>
-    <button
-      type="submit"
-      mat-raised-button
-      color="primary"
-      (click)="submit(employeeForm)"
-    >
-      Submit
-    </button>
+    <div class="row mb-3">
+      <div class="col d-flex justify-content-end">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          (click)="submit(employeeForm)"
+          [disabled]="employeeForm.invalid"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
   </div>
 </div>

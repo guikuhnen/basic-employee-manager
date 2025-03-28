@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['/employee-list']);
     }, (error) => {
       localStorage.clear();
-      alert(error.statusText);
+      alert(error.error.message);
     });
   }
 }

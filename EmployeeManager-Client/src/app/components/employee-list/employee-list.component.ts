@@ -33,11 +33,18 @@ export class EmployeeListComponent {
       .subscribe(
         (response: Employee[]) => {
           this.dataSource = response;
+          this.dataSource.forEach(element => {
+            if (element.managerId) {
+              console.log(element);
+              element.managerName = this.dataSource.filter(x => x.id == element.managerId)[0].name;
+            }
+          });
+
           this.isLoading = false;
         },
         (error) => {
           localStorage.setItem('authenticated', 'false');
-          alert(error.statusText);
+          alert(error.error.message);
           this.router.navigate(['/login']);
         }
       );
@@ -63,7 +70,7 @@ export class EmployeeListComponent {
           window.location.reload();
         },
         (error) => {
-          alert(error.statusText);
+          alert(error.error.message);
         }
       );
   }
@@ -81,7 +88,7 @@ export class EmployeeListComponent {
           this.router.navigate(['/login']);
         },
         (error) => {
-          alert(error.statusText);
+          alert(error.error.message);
         }
       );
   }

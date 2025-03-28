@@ -5,16 +5,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { Employee } from '../../shared/models/employee';
 import { PhoneNumber } from '../../shared/models/phone-number';
+import { ERoleType } from '../../shared/enums/e-role-type';
 
 @Component({
   selector: 'app-employee-edit',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, ReactiveFormsModule],
+  imports: [HttpClientModule, CommonModule, ReactiveFormsModule, FormsModule],
   providers: [DatePipe],
   templateUrl: './employee-edit.component.html',
   styleUrl: './employee-edit.component.scss',
@@ -24,6 +26,8 @@ export class EmployeeEditComponent {
 
   public employeeId: number = 0;
   public employeeForm: FormGroup;
+  public roleSelectList = new Map<number, string>();
+  public managerSelectList = new Map<number, string>();
 
   constructor(
     private router: Router,
@@ -36,16 +40,22 @@ export class EmployeeEditComponent {
       lastName: ['', Validators.required],
       email: ['', Validators.required],
       documentNumber: ['', Validators.required],
-      phoneNumbers: [],
+      phoneNumbers: [''],
       managerId: [''],
       role: ['', Validators.required],
       birthDate: ['', Validators.required],
       password: ['', Validators.required],
     });
+
+    for (let index = 0; index < Object.keys(ERoleType).length / 2; index++) {
+      this.roleSelectList.set(index, ERoleType[index]);
+    }
   }
 
   ngOnInit() {
     this.employeeId = Number(this.route.snapshot.paramMap.get('employeeId'));
+
+    this.getManagersToSelectList();
 
     // EDIT
     if (this.employeeId > 0) {
@@ -64,9 +74,9 @@ export class EmployeeEditComponent {
               documentNumber: response.documentNumber,
               phoneNumbers:
                 response.phoneNumbers?.length > 0
-                  ? response.phoneNumbers[0].number
+                  ? response.phoneNumbers.map((x) => x.number).join(', ')
                   : null,
-              managerId: response.managerId,
+              managerId: response.managerId === null ? '' : response.managerId,
               role: response.role,
               birthDate: this.datePipe.transform(
                 response.birthDate,
@@ -76,64 +86,39 @@ export class EmployeeEditComponent {
             });
           },
           (error) => {
-            alert(error.statusText);
+            alert(error.error.message);
           }
         );
     }
   }
 
-  submit(form: FormGroup) {
+  public submit(form: FormGroup) {
     if (form.valid) {
       let employee = form.value as Employee;
-      employee.active = true;
-      employee.role = Number(form.controls['role'].value);
-      employee.name = employee.firstName + ' ' + employee.lastName;
+      employee = this.formatEmployeeForSubmit(employee, form);
 
       // EDIT
       if (this.employeeId > 0) {
         employee.id = this.employeeId;
-        //employee.phoneNumbers.forEach((phoneNumber) => {
-        //  phoneNumber.employeeId = this.employeeId;
-        //});
-        
-        // TODO
-        employee.managerId = null;
-        employee.phoneNumbers = [
-          {
-            employeeId: this.employeeId,
-            number: form.controls['phoneNumbers'].value,
-          } as PhoneNumber,
-        ];
+        employee.phoneNumbers.forEach((phoneNumber) => {
+          phoneNumber.employeeId = this.employeeId;
+        });
 
         this.http
-          .put<Employee>(
-            'http://localhost:55000/employee',
-            employee,
-            {
-              headers: {
-                Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-              },
-            }
-          )
+          .put<Employee>('http://localhost:55000/employee', employee, {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+            },
+          })
           .subscribe(
             (response) => {
               this.router.navigate(['/employee-list']);
             },
             (error) => {
-              console.log(error);
-              alert(error.statusText);
+              alert(error.error.message);
             }
           );
       } else {
-        // TODO
-        employee.managerId = null;
-        employee.phoneNumbers = [
-          {
-            employeeId: 0,
-            number: form.controls['phoneNumbers'].value,
-          } as PhoneNumber,
-        ];
-
         this.http
           .post<Employee>('http://localhost:55000/employee', employee, {
             headers: {
@@ -145,10 +130,60 @@ export class EmployeeEditComponent {
               this.router.navigate(['/employee-list']);
             },
             (error) => {
-              alert(error.statusText);
+              alert(error.error.message);
             }
           );
       }
     }
+  }
+
+  private getManagersToSelectList() {
+    this.http
+      .get<Employee[]>('http://localhost:55000/employee', {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+      })
+      .subscribe(
+        (response: Employee[]) => {
+          response.forEach((employee) => {
+            this.managerSelectList.set(
+              employee.id,
+              employee.name ?? employee.firstName
+            );
+          });
+        },
+        (error) => {
+          alert(error.error.message);
+        }
+      );
+  }
+
+  private formatEmployeeForSubmit(
+    employee: Employee,
+    form: FormGroup
+  ): Employee {
+    employee.active = true;
+    employee.role = Number(form.controls['role'].value);
+
+    employee.name = employee.firstName + ' ' + employee.lastName;
+    if (employee.managerId?.toString() === '') {
+      employee.managerId = null;
+    }
+
+    const phones: string[] = form.controls['phoneNumbers'].value
+      .replace(/\s/g, '')
+      .split(',');
+    employee.phoneNumbers = [];
+    phones?.forEach((element) => {
+      if (Number(element)) {
+        employee.phoneNumbers.push({
+          employeeId: 0,
+          number: element,
+        } as PhoneNumber);
+      }
+    });
+
+    return employee;
   }
 }
